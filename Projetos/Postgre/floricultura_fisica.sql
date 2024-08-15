@@ -1,0 +1,67 @@
+﻿-- DROP MODO DEV
+DROP TABLE IF EXISTS cliente;
+DROP SEQUENCE IF EXISTS cliente_id_seq;
+DROP TABLE IF EXISTS produto;
+DROP SEQUENCE IF EXISTS produto_id_seq;
+DROP TABLE IF EXISTS produto;
+
+-- TABELA CLIENTE
+CREATE SEQUENCE IF NOT EXISTS cliente_id_seq;
+
+CREATE TABLE IF NOT EXISTS cliente (
+
+	id INTEGER NOT NULL DEFAULT NEXTVAL('cliente_id_seq'),
+	rg INTEGER NOT NULL,
+	nome_cliente CHARACTER VARYING(100) NOT NULL,
+	telefone CHARACTER VARYING(100) NOT NULL,
+	endereco CHARACTER VARYING(100) NOT NULL,
+	excluido BOOLEAN DEFAULT false,
+
+	CONSTRAINT cliente_pk PRIMARY KEY (id)
+);
+
+-- TABELA PRODUTO
+CREATE SEQUENCE IF NOT EXISTS produto_id_seq;
+
+CREATE TABLE IF NOT EXISTS produto (
+
+	id INTEGER NOT NULL DEFAULT NEXTVAL('produto_id_seq'),
+	nome_produto CHARACTER VARYING(100) NOT NULL,
+	tipo CHARACTER VARYING(100) NOT NULL,
+	preco DECIMAL NOT NULL,
+	quantidade_estoque INTEGER NOT NULL,
+	excluido BOOLEAN DEFAULT false,
+
+	CONSTRAINT produto_pk PRIMARY KEY (id)
+);
+
+-- TABELA ITEM_COMPRA
+CREATE SEQUENCE IF NOT EXISTS item_compra_id_seq;
+
+CREATE TABLE IF NOT EXISTS item_compra (
+
+	id INTEGER NOT NULL DEFAULT NEXTVAL('cliente_id_seq'),
+	id_produto INTEGER NOT NULL,
+	preco_produto DECIMAL NOT NULL,
+	quantidade_produto INTEGER NOT NULL,
+
+	CONSTRAINT item_compra_pk PRIMARY KEY (id),
+
+	CONSTRAINT item_compra_produto_id_produto_fk FOREIGN KEY (id_produto) REFERENCES produto (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+	CONSTRAINT item_compra_produto_preco_produto_fk FOREIGN KEY (preco_produto) REFERENCES produto (preco) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+-- TABELA COMPRA
+CREATE SEQUENCE IF NOT EXISTS compra_id_seq;
+
+CREATE TABLE IF NOT EXISTS compra (
+
+	id INTEGER NOT NULL DEFAULT NEXTVAL('compra_id_seq'),
+	data_compra DATE NOT NULL
+	preco_total DECIMAL NOT NULL,
+	nome_cliente CHARACTER VARYING(100),
+
+	CONSTRAINT compra_pk PRIMARY KEY (id)
+
+	CONSTRAINT compra_cliente_nome_cliente_fk FOREIGN KEY (nome_cliente) REFERENCES cliente (nome_cliente) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
