@@ -183,5 +183,3 @@ VALUES
 INSERT INTO produto_pedido (codigo_pedido, codigo_produto)
 VALUES
 (4, 1);
-
-
