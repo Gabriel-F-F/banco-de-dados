@@ -214,14 +214,19 @@ INSERT INTO item_pedido (id_pedido, sequencial, codigo_barra, quantidade, valor_
 -- organizar o nome as colunas e tabelas
 
 SELECT 
-	ip.id_pedido,
-	produto.codigo_barra,
+	pedido.id,
+	pedido.data_pedido,
+	ip.sequencial,
+	ip.codigo_barra,
 	produto.nome AS nome_produto,
-	produto.estoque
-
+	ip.quantidade,
+	ip.valor_unitario,
+	(ip.quantidade * ip.valor_unitario) AS valor_total,
+	fp.nome
 FROM item_pedido ip
 INNER JOIN produto ON (produto.codigo_barra = ip.codigo_barra)
-LEFT JOIN pedido ON (ip.id_pedido = pedido.id)
+INNER JOIN pedido ON (ip.id_pedido = pedido.id)
+INNER JOIN forma_pagamento fp ON (fp.id = pedido.id_forma_pagamento)
 
 -- relacionar o cliente com cliente_pf e cliente pj
 -- listar apenas clientes pessoa fisica
@@ -247,8 +252,8 @@ INNER JOIN cliente_pj pj ON (cliente.id = pj.id)
 -- listas tudo das 3 tabelas
 
 SELECT 
-	cliente.whatsapp,
-	cliente.email,
+	cliente.whatsapp AS cliente_whatsapp,
+	cliente.email AS cliente_email,
 	pf.nome AS nome_pessoa_fisica,
 	pf.cpf,
 	pf.data_nascimento,
