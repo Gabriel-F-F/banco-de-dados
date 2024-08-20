@@ -208,58 +208,43 @@ INSERT INTO pedido (id, data_pedido, id_cliente, id_forma_pagamento) VALUES (2, 
 INSERT INTO item_pedido (id_pedido, sequencial, codigo_barra, quantidade, valor_unitario) VALUES (2, 1, 7890000000006, 1, 79.90);
 INSERT INTO item_pedido (id_pedido, sequencial, codigo_barra, quantidade, valor_unitario) VALUES (2, 2, 7890000000007, 1, 39.90);
 
--- JOINS
+INSERT INTO pedido (id, data_pedido, id_cliente, id_forma_pagamento) VALUES (3, '2024-08-14 07:21:00', 3, 1);
+INSERT INTO item_pedido (id_pedido, sequencial, codigo_barra, quantidade, valor_unitario) VALUES (3, 1, 7890000000006, 1, 79.90);
+INSERT INTO item_pedido (id_pedido, sequencial, codigo_barra, quantidade, valor_unitario) VALUES (3, 2, 7890000000007, 1, 39.90);
+INSERT INTO item_pedido (id_pedido, sequencial, codigo_barra, quantidade, valor_unitario) VALUES (3, 3, 7890000000001, 3, 8.9);
+INSERT INTO item_pedido (id_pedido, sequencial, codigo_barra, quantidade, valor_unitario) VALUES (3, 4, 7890000000008, 1, 9.99);
 
--- item de venda -> relacionar com pedido e produto
--- organizar o nome as colunas e tabelas
+INSERT INTO pedido (id, data_pedido, id_cliente, id_forma_pagamento) VALUES (4, '2024-08-14 07:21:00', 6, 1);
+INSERT INTO item_pedido (id_pedido, sequencial, codigo_barra, quantidade, valor_unitario) VALUES (4, 1, 7890000000006, 1, 79.90);
+INSERT INTO item_pedido (id_pedido, sequencial, codigo_barra, quantidade, valor_unitario) VALUES (4, 2, 7890000000007, 1, 39.90);
+INSERT INTO item_pedido (id_pedido, sequencial, codigo_barra, quantidade, valor_unitario) VALUES (4, 3, 7890000000008, 1, 9.99);
+INSERT INTO item_pedido (id_pedido, sequencial, codigo_barra, quantidade, valor_unitario) VALUES (4, 4, 7890000000008, 1, 9.99);
 
-SELECT 
-	pedido.id,
-	pedido.data_pedido,
-	ip.sequencial,
-	ip.codigo_barra,
-	produto.nome AS nome_produto,
-	ip.quantidade,
-	ip.valor_unitario,
-	(ip.quantidade * ip.valor_unitario) AS valor_total,
-	fp.nome
-FROM item_pedido ip
-INNER JOIN produto ON (produto.codigo_barra = ip.codigo_barra)
-INNER JOIN pedido ON (ip.id_pedido = pedido.id)
-INNER JOIN forma_pagamento fp ON (fp.id = pedido.id_forma_pagamento)
+INSERT INTO pedido (id, data_pedido, id_cliente, id_forma_pagamento) VALUES (5, '2024-08-14 07:21:00', 2, 2);
+INSERT INTO item_pedido (id_pedido, sequencial, codigo_barra, quantidade, valor_unitario) VALUES (5, 1, 7890000000006, 1, 79.90);
+INSERT INTO item_pedido (id_pedido, sequencial, codigo_barra, quantidade, valor_unitario) VALUES (5, 2, 7890000000001, 3, 8.9);
+INSERT INTO item_pedido (id_pedido, sequencial, codigo_barra, quantidade, valor_unitario) VALUES (5, 3, 7890000000007, 1, 39.90);
 
--- relacionar o cliente com cliente_pf e cliente pj
--- listar apenas clientes pessoa fisica
+INSERT INTO pedido (id, data_pedido, id_cliente, id_forma_pagamento) VALUES (6, '2024-08-14 07:21:00', 1, 4);
+INSERT INTO item_pedido (id_pedido, sequencial, codigo_barra, quantidade, valor_unitario) VALUES (6, 1, 7890000000006, 1, 79.90);
+INSERT INTO item_pedido (id_pedido, sequencial, codigo_barra, quantidade, valor_unitario) VALUES (6, 2, 7890000000007, 1, 39.90);
+INSERT INTO item_pedido (id_pedido, sequencial, codigo_barra, quantidade, valor_unitario) VALUES (6, 3, 7890000000001, 3, 8.9);
+INSERT INTO item_pedido (id_pedido, sequencial, codigo_barra, quantidade, valor_unitario) VALUES (6, 4, 7890000000008, 1, 9.99);
 
-SELECT 
-	pf.nome AS nome_pessoa_fisica,
-	pf.cpf,
-	pf.data_nascimento,
-	pf.sexo
-FROM cliente
-INNER JOIN cliente_pf pf ON (cliente.id = pf.id)
-
--- listar apenas clientes pessoa juridica
+-- SELECT -----------------------------------------------------------------------------------------------------------------------------
 
 SELECT 
-	pj.nome_fantasia, 
-	pj.razao_social,
-	pj.cnpj,
-	pj.incricao_estadual
-FROM cliente
-INNER JOIN cliente_pj pj ON (cliente.id = pj.id)
-
--- listas tudo das 3 tabelas
+	forma_pagamento.nome AS forma_pagamento,
+	COUNT(*) AS quantidade_comprada,
+	SUM(quantidade * valor_unitario) AS valor_compras
+FROM item_pedido
+INNER JOIN pedido ON (pedido.id = item_pedido.id_pedido)
+INNER JOIN forma_pagamento ON (pedido.id_forma_pagamento = forma_pagamento.id)
+GROUP BY forma_pagamento.nome
 
 SELECT 
-	cliente.whatsapp AS cliente_whatsapp,
-	cliente.email AS cliente_email,
-	pf.nome AS nome_pessoa_fisica,
-	pf.cpf,
-	pf.data_nascimento,
-	pj.nome_fantasia AS nome_fantasia_pessoa_juridica, 
-	pj.razao_social, 
-	pj.cnpj
-FROM cliente
-LEFT JOIN cliente_pf pf ON (pf.id = cliente.id)
-LEFT JOIN cliente_pj pj ON (pj.id = cliente.id)
+	categoria.nome AS categoria_produto,
+	SUM(produto.estoque) AS produtos_total
+FROM produto
+INNER JOIN categoria ON (categoria.id = produto.id_categoria)
+GROUP BY categoria.nome
