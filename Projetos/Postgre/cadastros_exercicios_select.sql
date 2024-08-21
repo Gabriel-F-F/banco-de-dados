@@ -257,8 +257,8 @@ SELECT
 	COUNT(DISTINCT cidade.cidade) AS quantidade_alunos_distintos
 FROM aluno
 INNER JOIN cidade ON (cidade.id = aluno.id_cidade)
-GROUP BY aluno.sexo, aluno.tipo_sanguineo 
-ORDER BY  aluno.tipo_sanguineo, aluno.sexo DESC
+GROUP BY aluno.tipo_sanguineo, aluno.sexo
+ORDER BY aluno.sexo DESC, aluno.tipo_sanguineo
 
 ----------------------------------------------------------------------------------------------------------------------
 -- 12. Agrupe os dados por cidade e:
@@ -292,5 +292,5 @@ SELECT
 	ROUND(AVG(aluno.altura), 2) AS media_altura
 FROM aluno
 INNER JOIN signo ON (signo.id = aluno.id_signo)	
-GROUP BY (signo.nome, aluno.sexo)
+GROUP BY signo.nome, aluno.sexo
 ORDER BY aluno.sexo DESC, quantidade_alunos DESC
