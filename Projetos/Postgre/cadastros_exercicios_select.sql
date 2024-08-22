@@ -212,8 +212,9 @@ SELECT
 	signo.nome AS signo
 FROM aluno
 INNER JOIN cidade ON (cidade.id = aluno.id_cidade)
-INNER JOIN signo ON (signo.id = aluno.id_signo)
+LEFT JOIN signo ON (signo.id = aluno.id_signo)
 WHERE (aluno.id_cidade = 9 OR aluno.id_cidade = 12 OR aluno.id_cidade = 17)
+AND aluno.id_signo IS NULL
 AND aluno.tipo_sanguineo ILIKE '%b%'
 ORDER BY aluno.id
 
