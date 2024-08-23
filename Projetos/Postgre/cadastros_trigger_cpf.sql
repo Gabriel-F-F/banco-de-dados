@@ -1,4 +1,4 @@
-﻿CREATE OR REPLACE FUNCTION altera_cpf_function() RETURNS trigger AS $$
+﻿ CREATE OR REPLACE FUNCTION altera_cpf_function() RETURNS trigger AS $$
 
 	BEGIN
 		IF NEW.cpf <> OLD.cpf THEN

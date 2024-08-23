@@ -1,0 +1,42 @@
+CREATE OR REPLACE FUNCTION teste_record() RETURNS void AS
+$$
+    DECLARE
+        aluno RECORD;
+BEGIN
+
+	FOR aluno IN SELECT * FROM aluno ORDER BY id LOOP
+
+	    RAISE INFO 'Nome: %', aluno.nome;
+
+	    IF aluno.sexo = 'M' THEN
+	        RAISE INFO 'SEXO MASCULINO';
+	    END IF;
+
+
+    END LOOP;
+
+END;
+$$
+LANGUAGE plpgsql;
+
+SELECT teste_record(1,2);
+
+-- ALTER TABLE aluno ADD COLUMN data_cadastro TIMESTAMP DEFAULT NOW();
+-- ALTER TABLE aluno RENAME COLUMN data_cadastro TO data_cadastro_novo;
+-- ALTER TABLE aluno ALTER COLUMN tipo_sanguineo TYPE VARCHAR(4);
+-- ALTER TABLE aluno DROP COLUMN data_cadastro;
+
+CREATE OR REPLACE FUNCTION soma(integer, integer) RETURNS integer AS
+$$
+    DECLARE
+        numero1 ALIAS FOR $1;
+        numero2 ALIAS FOR $2;
+BEGIN
+
+	RETURN numero1 + numero2;
+
+END;
+$$
+LANGUAGE plpgsql;
+
+SELECT soma(1,2);
